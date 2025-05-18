@@ -1,12 +1,39 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import Header from "./Header"
 
 export default function Main() {
+  const [sidebarOpen, setSidebarOpen] = useState(true)
+
+  // Listen for sidebar state changes
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const isOpen = localStorage.getItem("sidebarOpen") === "true"
+      setSidebarOpen(isOpen)
+    }
+
+    // Check initial state
+    const initialState = localStorage.getItem("sidebarOpen")
+    if (initialState !== null) {
+      setSidebarOpen(initialState === "true")
+    }
+
+    window.addEventListener("sidebarToggle", handleStorageChange)
+    return () => window.removeEventListener("sidebarToggle", handleStorageChange)
+  }, [])
+
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-900 to-black text-white">
       <Header />
-      <div className="ml-64 p-6">
+
+      {/* Main Content */}
+      <div
+        className="transition-all duration-300 ease-in-out p-6"
+        style={{
+          marginLeft: sidebarOpen ? "16rem" : "4rem",
+        }}
+      >
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold mb-6">Welcome to MindRush AI Research</h1>
 

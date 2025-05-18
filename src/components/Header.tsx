@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Menu, X } from "lucide-react"
 
 export default function Header() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(true)
 
   const mainLinks = [
     { name: "Latest", href: "#latest" },
@@ -18,37 +18,30 @@ export default function Header() {
   ]
 
   return (
-    <div className="fixed inset-y-0 left-0 z-50 flex flex-col w-full md:w-64 bg-black text-white">
-      {/* Mobile Header */}
-      <div className="flex items-center justify-between p-4 md:hidden border-b border-white/10">
-        <h1 className="text-xl font-bold">MindRush AI | Research</h1>
-        <button onClick={() => setIsOpen(!isOpen)} className="p-1">
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
+    <div className="fixed inset-y-0 left-0 z-50 flex flex-col w-64 bg-black text-white">
+      <div className="flex items-center justify-between p-6 border-b border-white/10">
+        <h1 className="text-xl font-light">@mindrushai</h1>
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="flex items-center justify-center w-6 h-6 rounded-sm border border-white/20"
+        >
+          {isOpen ? <X size={14} /> : <Menu size={14} />}
         </button>
       </div>
-
-      {/* Logo Section */}
-      <div className="hidden md:flex items-center p-6 border-b border-white/10">
-        <h1 className="text-xl font-bold">MindRush AI</h1>
-      </div>
-
-      {/* Navigation */}
-      <nav className={`flex-1 overflow-y-auto ${isOpen ? "block" : "hidden md:block"}`}>
-        <ul className="py-6 px-4 space-y-4">
+      <nav
+        className={`flex-1 overflow-y-auto transition-all duration-300 ease-in-out ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+      >
+        <ul className="py-6 space-y-1">
           {mainLinks.map((link) => (
             <li key={link.name}>
-              <a href={link.href} className="block py-2 hover:text-purple-400 transition-colors">
+              <a href={link.href} className="block py-2 px-6 hover:bg-white/5 transition-colors relative group">
                 {link.name}
+                <span className="absolute bottom-0 left-6 right-6 h-[1px] bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></span>
               </a>
             </li>
           ))}
         </ul>
       </nav>
-
-      {/* Footer */}
-      <div className="hidden md:block p-4 border-t border-white/10">
-        <button className="w-full py-2 text-center hover:bg-white/10 rounded transition-colors">Toggle Theme</button>
-      </div>
     </div>
   )
 }

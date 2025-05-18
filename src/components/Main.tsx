@@ -1,60 +1,51 @@
-"use client"
-
 import { useState, useEffect } from "react"
 import Header from "./Header"
+import Hero from "./Hero"
 
 export default function Main() {
   const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [isMobile, setIsMobile] = useState(false)
 
-  // Listen for sidebar state changes
+  // Only one place for sidebarOpen/isMobile logic
   useEffect(() => {
-    const handleStorageChange = () => {
-      const isOpen = localStorage.getItem("sidebarOpen") === "true"
-      setSidebarOpen(isOpen)
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768)
     }
 
-    // Check initial state
-    const initialState = localStorage.getItem("sidebarOpen")
-    if (initialState !== null) {
-      setSidebarOpen(initialState === "true")
+    const handleSidebarToggle = () => {
+      const isOpen = localStorage.getItem("sidebarOpen")
+      setSidebarOpen(isOpen === null ? true : isOpen === "true")
     }
 
-    window.addEventListener("sidebarToggle", handleStorageChange)
-    return () => window.removeEventListener("sidebarToggle", handleStorageChange)
+    checkIfMobile()
+    handleSidebarToggle()
+
+    window.addEventListener("resize", checkIfMobile)
+    window.addEventListener("sidebarToggle", handleSidebarToggle)
+
+    return () => {
+      window.removeEventListener("resize", checkIfMobile)
+      window.removeEventListener("sidebarToggle", handleSidebarToggle)
+    }
   }, [])
 
+  // Update localStorage and notify on change
+  useEffect(() => {
+    localStorage.setItem("sidebarOpen", sidebarOpen.toString())
+    window.dispatchEvent(new CustomEvent("sidebarToggle"))
+  }, [sidebarOpen])
+
+  const mainMarginLeft = !isMobile && sidebarOpen ? "ml-64" : ""
+  const mainMarginTop = isMobile && !sidebarOpen ? "mt-16" : ""
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black via-zinc-900 to-black text-white">
-      <Header />
-
-      {/* Main Content */}
-      <div
-        className="transition-all duration-300 ease-in-out p-6"
-        style={{
-          marginLeft: sidebarOpen ? "16rem" : "4rem",
-        }}
-      >
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold mb-6">Welcome to MindRush AI Research</h1>
-
-          <div className="grid gap-8">
-            <section id="latest" className="bg-zinc-900/50 p-6 rounded-xl">
-              <h2 className="text-xl font-semibold mb-4">Latest Research</h2>
-              <p className="text-zinc-300">Explore our most recent findings and breakthroughs in AI technology.</p>
-            </section>
-
-            <section id="feature" className="bg-zinc-900/50 p-6 rounded-xl">
-              <h2 className="text-xl font-semibold mb-4">Featured Projects</h2>
-              <p className="text-zinc-300">Discover our highlighted research projects and innovations.</p>
-            </section>
-
-            <section id="about" className="bg-zinc-900/50 p-6 rounded-xl">
-              <h2 className="text-xl font-semibold mb-4">About Our Research</h2>
-              <p className="text-zinc-300">Learn about our mission, methodology, and research focus areas.</p>
-            </section>
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-black text-white">
+      <Header
+        sidebarOpen={sidebarOpen}
+        isMobile={isMobile}
+        setSidebarOpen={setSidebarOpen}
+      />
+      <Hero mainMarginLeft={mainMarginLeft} mainMarginTop={mainMarginTop} />
     </div>
   )
 }

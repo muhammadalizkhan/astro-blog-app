@@ -1,21 +1,14 @@
-// @ts-check
+// astro.config.mjs
 import { defineConfig } from 'astro/config';
-// @ts-ignore
-import vercel from '@astrojs/vercel/server';
+import vercel from '@astrojs/vercel/serverless'; // ✅ correct adapter for SSR
 import react from '@astrojs/react';
 import tailwind from '@astrojs/tailwind';
 
-// https://astro.build/config
 export default defineConfig({
   output: 'server',
   adapter: vercel(),
   integrations: [
     react(),
-    tailwind({
-      // @ts-ignore
-      config: {
-        applyBaseStyles: true
-      }
-    })
+    tailwind()
   ]
 });

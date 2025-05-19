@@ -1,6 +1,7 @@
 "use client"
 
 import { ChevronLeft, ChevronRight, Menu } from "lucide-react"
+import { Separator } from "@/components/ui/separator"
 
 interface HeaderProps {
   sidebarOpen: boolean
@@ -9,24 +10,72 @@ interface HeaderProps {
 }
 
 export default function Header({ sidebarOpen, isMobile, setSidebarOpen }: HeaderProps) {
-  const mainLinks = [
-    { name: "Latest", href: "#latest" },
-    { name: "Feature", href: "#feature" },
-    { name: "About", href: "#about" },
-    { name: "Contact", href: "#contact" },
-    { name: "Categories", href: "#categories" },
-    { name: "Company", href: "#company" },
-    { name: "Stories", href: "#stories" },
-    { name: "News", href: "#news" },
-    { name: "Research", href: "#research" },
-    { name: "Projects", href: "#projects" },
-    { name: "Publications", href: "#publications" },
-    { name: "Resources", href: "#resources" },
+  const groupedLinks = [
+    {
+      title: "MindRush Core",
+      links: [
+        { name: "Latest", href: "#latest" },
+        { name: "Feature", href: "#feature" },
+        { name: "Projects", href: "#projects" },
+        { name: "Publications", href: "#publications" },
+        { name: "About", href: "#about" },
+        { name: "Contact", href: "#contact" },
+      ]
+    },
+    {
+      title: "MindRush Development",
+      links: [
+        { name: "AI Development", href: "#contact" },
+        { name: "LLM Agents", href: "#categories" },
+        { name: "Software Development", href: "#company" },
+        { name: "Ecommerce", href: "#stories" },
+        { name: "Product Development", href: "#news" },
+        { name: "UI UX Trends", href: "#research" },
+      ]
+    },
+    {
+      title: "MindRush Resources",
+      links: [
+        { name: "Blog", href: "#blog" },
+        { name: "Tutorials", href: "#tutorials" },
+        { name: "Guides", href: "#guides" },
+        { name: "Templates", href: "#templates" },
+        { name: "Checklists", href: "#checklists" },
+        { name: "Toolkits", href: "#toolkits" },
+        { name: "Whitepapers", href: "#whitepapers" },
+        { name: "Research Papers", href: "#researchpapers" },
+        { name: "Reports", href: "#reports" },
+        { name: "Infographics", href: "#infographics" },
+        { name: "Ebooks", href: "#ebooks" },
+      ]
+    },
+    {
+      title: "MindRush Community",
+      links: [
+        { name: "Events", href: "#events" },
+        { name: "Webinars", href: "#webinars" },
+        { name: "Workshops", href: "#workshops" },
+        { name: "Podcasts", href: "#podcasts" },
+        { name: "Videos", href: "#videos" },
+        { name: "Community", href: "#community" },
+        { name: "Careers", href: "#careers" },
+        { name: "Support", href: "#support" },
+        { name: "FAQ", href: "#faq" },
+      ]
+    },
+    {
+      title: "MindRush Legal",
+      links: [
+        { name: "Privacy Policy", href: "#privacy" },
+        { name: "Terms of Service", href: "#terms" },
+        { name: "Cookie Policy", href: "#cookies" },
+        { name: "Sitemap", href: "#sitemap" },
+      ]
+    },
   ]
 
   return (
     <>
-      {/* Topbar (for mobile when sidebar is closed) */}
       {!sidebarOpen && isMobile && (
         <div className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between bg-black text-white h-16 px-4 shadow-md border-b border-white/10">
           <h1 className="text-xl font-light">@mindrushai</h1>
@@ -40,7 +89,6 @@ export default function Header({ sidebarOpen, isMobile, setSidebarOpen }: Header
         </div>
       )}
 
-      {/* Desktop Open Sidebar Button */}
       {!sidebarOpen && !isMobile && (
         <button
           onClick={() => setSidebarOpen(true)}
@@ -51,9 +99,8 @@ export default function Header({ sidebarOpen, isMobile, setSidebarOpen }: Header
         </button>
       )}
 
-      {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 z-50 h-full w-64 bg-black text-white transform transition-transform duration-300 ease-in-out ${
+        className={`fixed top-0 left-0 z-50 h-full w-64 bg-black text-white transform transition-transform duration-300 ease-in-out flex flex-col ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -67,21 +114,33 @@ export default function Header({ sidebarOpen, isMobile, setSidebarOpen }: Header
             <ChevronLeft size={16} />
           </button>
         </div>
-        <nav className="flex-1 overflow-y-auto no-scrollbar">
-          <ul className="py-4">
-            {mainLinks.map((link) => (
-              <li key={link.name}>
-                <a
-                  href={link.href}
-                  className="block py-2 px-4 hover:bg-white/10 transition-colors"
-                  onClick={() => isMobile && setSidebarOpen(false)}
-                >
-                  {link.name}
-                </a>
+
+        <nav className="flex-1 overflow-y-auto scrollbar-none">
+          <ul className="py-2 space-y-6 px-2">
+            {groupedLinks.map((group) => (
+              <li key={group.title}>
+                <div className="px-2 text-xs uppercase tracking-wide text-white/50 mb-1">{group.title}</div>
+                <div className="space-y-1">
+                  {group.links.map((link) => (
+                    <a
+                      key={link.name}
+                      href={link.href}
+                      className="block py-2 px-3 text-sm rounded hover:bg-white/10 transition-colors"
+                      onClick={() => isMobile && setSidebarOpen(false)}
+                    >
+                      {link.name}
+                    </a>
+                  ))}
+                </div>
               </li>
             ))}
           </ul>
         </nav>
+
+        <footer className="border-t border-white/10 p-4 text-xs text-white/60">
+          <p>&copy; {new Date().getFullYear()} Mindrush AI. All rights reserved.</p>
+          <p className="mt-1">Privacy | Terms | Contact</p>
+        </footer>
       </div>
     </>
   )

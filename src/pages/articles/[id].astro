@@ -1,0 +1,8 @@
+---
+export const prerender = false; // Make this route server-rendered
+
+import ArticleDetailPage from '../../components/ArticleDetailPage.tsx';
+const { id } = Astro.params; // Access dynamic route params
+---
+
+<ArticleDetailPage id={id ?? ''} client:load />
